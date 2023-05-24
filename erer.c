@@ -1,85 +1,140 @@
 #include "header.h"
 
 /**
- *pais - print input string
- * @str: string to be printed
- *
- * Return: void func
+ * str_to_int - convert string to integer
+ * @s: string to be converted
+ * Return: 0 no numbers in string, or converted number
+ *       -1 error
  */
-void pais(char *str)
+int str_to_int(char *s)
 {
 	int i = 0;
+	unsigned long int result = 0;
 
-	if (!str)
-		return;
-	while (str[i] != '\0')
+	if (*s == '+')
+		s++;  /* TODO: why does this make main return 255? */
+	for (i = 0;  s[i] != '\0'; i++)
 	{
-		w_to_stdr(str[i]);
-		i++;
+		if (s[i] >= '0' && s[i] <= '9')
+		{
+			result *= 10;
+			result += (s[i] - '0');
+			if (result > INT_MAX)
+				return (-1);
+		}
+		else
+			return (-1);
 	}
+	return (result);
 }
 
 /**
- * w_to_stdr - writes c character to stderr
- * @c: character to be printed
- *
- * Return: 1 success.
- * On error, -1 returned, errno is set appropriately.
+ * p_error - print error message
+ * @info: parameter and return info struct
+ * @estr: string withe the specified error type
+ * Return: 0 no numbers in string, or converted to number
+ *        -1 error
  */
-int w_to_stdr(char c)
+void p_error(inft *info, char *estr)
 {
-	static int i;
-	static char buf[W_BUFF_S];
-
-	if (c == BUFF_FL || i >= W_BUFF_S)
-	{
-		write(2, buf, i);
-		i = 0;
-	}
-	if (c != BUFF_FL)
-		buf[i++] = c;
-	return (1);
+	pais(info->fname);
+	pais(": ");
+	p_d_num(info->err_c, STDERR_FILENO);
+	pais(": ");
+	pais(info->argv[0]);
+	pais(": ");
+	pais(estr);
 }
 
 /**
- * wc_to_fd - writes c character to given fd
- * @c: character to be printed
+ * p_d_num - func prints decimal (integer) number (base 10)
+ * @input: input
  * @fd: filedescriptor to write to
  *
- * Return: 1 on success.
- * On error, -1 returned, errno is set appropriately.
+ * Return: num of characters printed
  */
-int wc_to_fd(char c, int fd)
+int p_d_num(int input, int fd)
 {
-	static int i;
-	static char buf[W_BUFF_S];
+	int (*_w_to_std_out)(char) = w_to_std_out;
+	int i, count = 0;
+	unsigned int abs, current;
 
-	if (c == BUFF_FL || i >= W_BUFF_S)
+	if (fd == STDERR_FILENO)
+		_w_to_std_out = w_to_stdr;
+	if (input < 0)
 	{
-		write(fd, buf, i);
-		i = 0;
+		abs = -input;
+		_w_to_std_out('-');
+		count++;
 	}
-	if (c != BUFF_FL)
-		buf[i++] = c;
-	return (1);
+	else
+		abs = input;
+	current = abs;
+	for (i = 1000000000; i > 1; i /= 10)
+	{
+		if (abs / i)
+		{
+			_w_to_std_out('0' + current / i);
+			count++;
+		}
+		current %= i;
+	}
+	_w_to_std_out('0' + current);
+	count++;
+
+	return (count);
 }
 
 /**
- *pains - print input string
- * @str: string to be printed
- * @fd: filedescriptor to write to
+ * conv_num - converter func, clone of itoa
+ * @num: the number
+ * @base: the base
+ * @flags: the argument flags
  *
- * Return: number of chars put
+ * Return: the string
  */
-int pains(char *str, int fd)
+char *conv_num(long int num, int base, int flags)
 {
-	int i = 0;
+	static char *array;
+	static char buffer[50];
+	char sign = 0;
+	char *ptr;
+	unsigned long n = num;
 
-	if (!str)
-		return (0);
-	while (*str)
+	if (!(flags & CONV_U) && num < 0)
 	{
-		i += wc_to_fd(*str++, fd);
+		n = -num;
+		sign = '-';
+
 	}
-	return (i);
+	array = flags & CONV_L ? "0123456789abcdef" : "0123456789ABCDEF";
+	ptr = &buffer[49];
+	*ptr = '\0';
+
+	do	{
+		*--ptr = array[n % base];
+		n /= base;
+	} while (n != 0);
+
+	if (sign)
+		*--ptr = sign;
+	return (ptr);
+}
+
+/**
+ * rm_comm - function replaces the first instance of '#' with '\0'
+ * @buf: the address of string to be modifyed
+ *
+ * Return: 0;
+ */
+void rm_comm(char *buf)
+{
+	int i;
+
+	for (i = 0; buf[i] != '\0'; i++)
+		if (buf[i] == '#' && (!i || buf[i - 1] == ' '))
+		{
+			buf[i] = '\0';
+			break;
+		}
 }
