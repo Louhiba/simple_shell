@@ -1,1 +1,1 @@
-0x16 simple_shell
+The simple shell 'group' project made by Othmane & hiba
