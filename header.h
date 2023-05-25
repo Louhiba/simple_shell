@@ -1,6 +1,7 @@
 #ifndef HEADER_H
 #define HEADER_H
 #include <stddef.h>
+#include <stddef.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <limits.h>
