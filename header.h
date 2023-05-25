@@ -1,6 +1,6 @@
 #ifndef HEADER_H
 #define HEADER_H
-
+#include <stddef.h>
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <limits.h>
@@ -88,7 +88,7 @@ typedef struct pinfo
 	int envc;
 	int sts;
 
-	char *c_b; / pointer to cmd ; chain buffer, for memory mangement */
+	char *c_b; /* pointer to cmd ; chain buffer, for memory mangement */
 	int cbt; /* CMD_type ||, &&, ; */
 	int rdfd;
 	int hstc;
@@ -111,7 +111,7 @@ typedef struct builtin
 
 
 /* cmdloop.c */
-int msl(inft , char *);
+int msl(inft, char *);
 int fbuild(inft *);
 void fcmd(inft *);
 void fkcmd(inft *);
@@ -183,12 +183,12 @@ int myaliases(inft *);
 
 /*getl.c */
 ssize_t g_inp(inft *);
-int g_ln(inft , char *, size_t *);
+int g_ln(inft, char *, size_t *);
 void b_cntr_c(int);
 
 /* geti.c */
 void clr_inf(inft *);
-void s_inf(inft , char *);
+void s_inf(inft, char *);
 void fr_inf(inft *, int);
 
 /* env.c */
@@ -211,8 +211,8 @@ int b_hst_l(inft *info, char *buf, int linecount);
 int remu_hst(inft *info);
 
 /* list.c */
-lstt an_so_l(lstt *, const char *, int);
-lstt an_endo_l(lstt *, const char *, int);
+lstt *an_so_l(lstt *, const char *, int);
+lstt *an_endo_l(lstt *, const char *, int);
 size_t p_ostr_ll(const lstt *);
 int del_n_i(lstt **, unsigned int);
 void f_lst(lstt **);
