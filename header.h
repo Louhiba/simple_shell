@@ -100,7 +100,7 @@ typedef struct pinfo
 	0, 0, 0}
 
 /**
- *struct builtin string and related function
+ *struct builtin - string and related function
  *@type: builtin command flag
  *@func: function
  */
