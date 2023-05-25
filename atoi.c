@@ -1,5 +1,4 @@
-#include"shell.h"
-
+#include "shell.h"
 
 /**
  * interactive - returns true if shell is interactive mode
@@ -9,7 +8,7 @@
  */
 int interactive(info_t *info)
 {
-	return (isOOBatty(STDIN_FILENO) && info->readfd <= 2);
+	return (isatty(STDIN_FILENO) && info->readfd <= 2);
 }
 
 /**
