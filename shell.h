@@ -135,7 +135,7 @@ int puts_fd(char *str, int fd);
 int _strlen(char *);
 int _strcmp(char *, char *);
 char *starts_with(const char *, const char *);
-char *strcat(char *, char *);
+char *_strcat(char *, char *);
 
 /* toem_string1.c */
 char *_strcpy(char *, char *);
@@ -200,7 +200,7 @@ int my_unset_env(inf_t *);
 int populate_env(inf_t *);
 
 /* toem_getenv.c */
-char **get_environ(inf_t *);
+char **getenviron(inf_t *);
 int unsetenv(inf_t *, char *);
 int setenv(inf_t *, char *, char *);
 
